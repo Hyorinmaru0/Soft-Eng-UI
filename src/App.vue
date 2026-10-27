@@ -1,8 +1,10 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
 import BillingInformation from './components/BillingInformation.vue'
+import HelpCenter from './components/HelpCenter.vue'
 
 const activePage = ref('dashboard')
+const activeHelpTopic = ref('overview')
 const activeSettingsTab = ref('accessibility')
 const studentView = ref('search')
 const savedMessage = ref('')
@@ -293,6 +295,14 @@ function saveBackupSchedule() {
         </button>
       </nav>
 
+      <div class="sidebar-label help-sidebar-label">HELP &amp; GUIDANCE</div>
+      <nav class="side-nav" aria-label="Help navigation">
+        <button :class="['nav-link', { active: activePage === 'help' }]" :aria-current="activePage === 'help' ? 'page' : undefined" @click="openPage('help')">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.4 2.4 0 1 1 4.1 1.7c-1.1 1.1-1.8 1.4-1.8 3M12 17.2v.1"/></svg>
+          <span>Help Center</span>
+        </button>
+      </nav>
+
       <div class="sidebar-bottom">
         <div class="support-card"><span class="support-spark">✳</span><strong>Here for your team</strong><p>Need a hand with the workspace?</p><a href="mailto:hello@breakthroughcenter.com">Contact support <span aria-hidden="true">→</span></a></div>
         <div class="sidebar-user"><span class="user-avatar">BT</span><span class="user-copy"><strong>Center team</strong><small>Administrator</small></span><button aria-label="Open settings" title="Settings" @click="openPage('settings')">···</button></div>
@@ -301,7 +311,7 @@ function saveBackupSchedule() {
 
     <main class="main-panel">
       <header class="top-header">
-        <div class="breadcrumb"><span>Workspace</span><span class="crumb-slash">/</span><strong>{{ activePage === 'dashboard' ? 'Dashboard' : activePage === 'students' ? 'Student Profiles' : activePage === 'billing' ? 'Billing Information' : 'Settings' }}</strong></div>
+        <div class="breadcrumb"><span>Workspace</span><span class="crumb-slash">/</span><strong>{{ activePage === 'dashboard' ? 'Dashboard' : activePage === 'students' ? 'Student Profiles' : activePage === 'billing' ? 'Billing Information' : activePage === 'help' ? 'Help Center' : 'Settings' }}</strong></div>
         <div class="header-right"><span class="today-label">Tuesday, October 27</span><span class="header-divider"></span><button class="header-avatar" aria-label="Center team profile">BT</button></div>
       </header>
 
@@ -439,6 +449,8 @@ function saveBackupSchedule() {
       </section>
 
       <BillingInformation v-else-if="activePage === 'billing'" :students="students" :can-manage="canManageStudents" @back="openPage('dashboard')" />
+
+      <HelpCenter v-else-if="activePage === 'help'" :can-manage="canManageStudents" :active-topic="activeHelpTopic" @select-topic="activeHelpTopic = $event" />
 
       <section v-else class="settings-page page-content">
         <div class="settings-heading"><p class="eyebrow">WORKSPACE PREFERENCES</p><h1>Settings</h1><p>Personalize your account and workspace, separately from center procedures.</p></div>
