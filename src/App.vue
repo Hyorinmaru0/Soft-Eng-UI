@@ -1,5 +1,6 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
+import BillingInformation from './components/BillingInformation.vue'
 
 const activePage = ref('dashboard')
 const activeSettingsTab = ref('accessibility')
@@ -282,6 +283,10 @@ function saveBackupSchedule() {
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20v-1.6A4.4 4.4 0 0 1 7.9 14h2.2a4.4 4.4 0 0 1 4.4 4.4V20M16 5.2a3.1 3.1 0 0 1 0 5.9m1.2 3h.9a3.8 3.8 0 0 1 3.8 3.8V20"/></svg>
           <span>Student Profiles</span>
         </button>
+        <button :class="['nav-link', { active: activePage === 'billing' }]" :aria-current="activePage === 'billing' ? 'page' : undefined" aria-label="Billing Information" title="Billing Information" @click="openPage('billing')">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h12v17l-3-1.5-3 1.5-3-1.5-3 1.5zM9 8h6M9 12h6M9 16h3"/></svg>
+          <span>Billing Information</span>
+        </button>
         <button :class="['nav-link', { active: activePage === 'settings' }]" :aria-current="activePage === 'settings' ? 'page' : undefined" @click="openPage('settings')">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="m19.2 13.8 1.1.9-1.5 2.6-1.4-.5a7.8 7.8 0 0 1-1.8 1l-.3 1.5h-3l-.3-1.5a7.8 7.8 0 0 1-1.8-1l-1.4.5-1.5-2.6 1.1-.9a7.2 7.2 0 0 1 0-2.1l-1.1-.9 1.5-2.6 1.4.5a7.8 7.8 0 0 1 1.8-1l.3-1.5h3l.3 1.5a7.8 7.8 0 0 1 1.8 1l1.4-.5 1.5 2.6-1.1.9a7.2 7.2 0 0 1 0 2.1Z"/></svg>
           <span>Settings</span>
@@ -296,7 +301,7 @@ function saveBackupSchedule() {
 
     <main class="main-panel">
       <header class="top-header">
-        <div class="breadcrumb"><span>Workspace</span><span class="crumb-slash">/</span><strong>{{ activePage === 'dashboard' ? 'Dashboard' : activePage === 'students' ? 'Student Profiles' : 'Settings' }}</strong></div>
+        <div class="breadcrumb"><span>Workspace</span><span class="crumb-slash">/</span><strong>{{ activePage === 'dashboard' ? 'Dashboard' : activePage === 'students' ? 'Student Profiles' : activePage === 'billing' ? 'Billing Information' : 'Settings' }}</strong></div>
         <div class="header-right"><span class="today-label">Tuesday, October 27</span><span class="header-divider"></span><button class="header-avatar" aria-label="Center team profile">BT</button></div>
       </header>
 
@@ -432,6 +437,8 @@ function saveBackupSchedule() {
         </template>
         <section v-else class="settings-card student-empty-card"><p class="student-empty-state">This student record is no longer available.</p><button class="button-secondary" type="button" @click="returnToStudentSearch">Return to search</button></section>
       </section>
+
+      <BillingInformation v-else-if="activePage === 'billing'" :students="students" :can-manage="canManageStudents" @back="openPage('dashboard')" />
 
       <section v-else class="settings-page page-content">
         <div class="settings-heading"><p class="eyebrow">WORKSPACE PREFERENCES</p><h1>Settings</h1><p>Personalize your account and workspace, separately from center procedures.</p></div>
